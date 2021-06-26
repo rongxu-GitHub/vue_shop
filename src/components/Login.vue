@@ -6,19 +6,19 @@
         <img src="../assets/logo.png" alt="">
       </div>
       <!-- 登录表单 -->
-      <el-form label-width="0px" class="login-form">
+      <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login-form">
         <!-- 用戶名 -->
-        <el-form-item>
-          <el-input></el-input>
+        <el-form-item prop="username">
+          <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
         </el-form-item>
         <!-- 密碼 -->
-        <el-form-item>
-          <el-input></el-input>
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" type="password"></el-input>
         </el-form-item>
         <!-- 按钮 -->
         <el-form-item class="btns">
-          <el-button type="primary">登录</el-button>
-          <el-button type="info">重置</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -28,6 +28,45 @@
 <script>
 export default {
   name: "login",
+  data() {
+    return {
+      // 这是登录表单的数据
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      // 这是表单的验证规则
+      loginFormRules: {
+        // 验证用户名是否合法
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        // 验证密码是否合法
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    resetLoginForm() {
+      // console.log(this)
+      this.$refs.loginFormRef.resetFields();
+    },
+    login() {
+      this.$refs.loginFormRef.validate(async valid => {
+        if(!valid) return;
+        const { data: res} = await this.$http.post('login', this.loginForm)
+        res.meta.status !== 200 ? this.$message.error('登录失败') : this.$message.success('登录成功'); 
+        // 登录成功后的token保存到sessionStorage中
+        window.sessionStorage.setItem("token", res.data.token);
+        // 通过编程式导航跳转到后台主页，路由地址是/home
+        this.$router.push("/home");
+      });
+    }
+  }
 };
 </script>
 
