@@ -32,8 +32,8 @@ export default {
     return {
       // 这是登录表单的数据
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       // 这是表单的验证规则
       loginFormRules: {
