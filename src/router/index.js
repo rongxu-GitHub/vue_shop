@@ -6,8 +6,12 @@ import Welcome from '@/components/Welcome'
 import Users from '@/components/user/Users'
 import Rights from '@/components/power/Rights'
 import Roles from '@/components/power/Roles'
+import Cate from '@/components/goods/Cate';
+import TreeTable from 'vue-table-with-tree-grid'
+import { Tree } from 'element-ui'
 
 Vue.use(Router)
+Vue.component('tree-table', TreeTable)
 
 const router = new Router({
   routes: [{
@@ -39,6 +43,10 @@ const router = new Router({
         {
           path: '/roles',
           component: Roles
+        },
+        {
+          path: '/categories',
+          component: Cate
         },
       ]
     }
